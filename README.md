@@ -1,124 +1,295 @@
-# MediBook — Dynamic Doctor Appointment & Healthcare Management System
+# MediBook — Doctor Appointment & Healthcare Management System
 
-Academic PHP/MySQL implementation aligned with the project proposal. The system covers patient, doctor and administrator workflows, including doctor verification, search/filtering, dynamic availability, appointment booking, conflict prevention, cancellation/rescheduling, queue/token management, waitlist, notifications, reviews, favorites, analytics and audit logs.
+MediBook is a web-based Doctor Appointment and Healthcare Management System built with **Core PHP and MongoDB**. It provides dedicated workflows for patients, doctors, clinics, and administrators to manage healthcare appointments and related operations.
 
-The proposal specifies HTML5/CSS3/Bootstrap/JavaScript on the frontend, PHP on the server, MySQL as the relational database, Apache/XAMPP for local development, Git/GitHub for version control, and a responsive web interface. fileciteturn1file2L199-L224
+The project is designed with a responsive user interface and a modular PHP architecture, making it suitable for local development, academic use, and further open-source development.
 
-## Local setup (XAMPP)
+## Key Features
 
-1. Install/start XAMPP.
-2. Start **Apache** and **MySQL**.
-3. Extract this folder into:
-   `C:\xampp\htdocs\doctor-appointment-system\`
-4. Open phpMyAdmin:
-   `http://localhost/phpmyadmin`
-5. Create/select database `doctor_appointment_db`.
-6. Import `database/database.sql`.
-   - The SQL is a clean academic setup script and recreates the project tables. Do not import it over a database containing data you need to keep.
-7. Confirm `config/database.php` matches your local MySQL credentials. Default XAMPP is:
-   - Host: `localhost`
-   - User: `root`
-   - Password: blank
-   - Database: `doctor_appointment_db`
-8. Open:
-   `http://localhost/doctor-appointment-system/`
-
-## Demo accounts
-
-All demo accounts use password: **123456**
-
-| Role | Email |
-|---|---|
-| Administrator | `admin@medibook.local` |
-| Doctor | `doctor@medibook.local` |
-| Patient | `patient@medibook.local` |
-
-The demo doctor is already approved, assigned to a clinic branch, and has recurring working hours so the dynamic slot flow can be tested immediately.
-
-## Main workflows
-
-### Patient
-- Register/login
-- Search and filter verified doctors
-- View doctor profile, clinics and ratings
-- Check AJAX live slots
-- Book an available slot
-- View appointment history
-- Cancel/reschedule according to configured rules
-- Join/cancel waitlist
-- View notifications
-- Track queue/token
+### Patient Management
+- Patient registration and login
+- Doctor search and filtering
+- Doctor profile and clinic information
+- Appointment booking
+- Appointment history
+- Appointment cancellation and rescheduling
+- Waitlist management
+- Notifications
+- Queue and token tracking
 - Favorite doctors
-- Review completed appointments
-- Update profile
+- Appointment reviews
+- Patient profile management
 
-### Doctor
-- Register/login after administrator verification
-- Manage professional profile
-- Manage recurring schedule
-- Add breaks and leave dates
-- View appointments
-- Confirm requests
-- Check-in patients and assign tokens
-- Move queue through status flow
-- Complete appointments
+### Doctor Management
+- Doctor registration and login
+- Administrator-based doctor verification
+- Professional profile management
+- Recurring schedule management
+- Break and leave management
+- Appointment management
+- Patient check-in
+- Queue and token management
+- Appointment status updates
 
-### Administrator
-- Dashboard and operational metrics
+### Administrator Management
+- Administrative dashboard
 - User management
 - Doctor verification
 - Specialization management
-- Clinic/branch management
-- Doctor-branch assignment
+- Clinic and branch management
+- Doctor-to-clinic assignment
 - Appointment monitoring
-- Review monitoring
-- Analytics/reports
+- Review management
+- Analytics and reports
 - Audit logs
 - System settings
 
-## Dynamic/advanced implementation
+### Advanced Features
+- Dynamic appointment slot availability
+- AJAX-based live slot updates
+- Appointment conflict prevention
+- Queue and token management
+- Waitlist notifications
+- Email notifications using PHPMailer
+- Role-based access control
+- CSRF protection
+- Password hashing and verification
+- Server-side validation
 
-- AJAX live slot availability
-- Slot generation from recurring schedules, breaks, leave dates and existing bookings
-- Transaction + row locking during booking to reduce double booking
-- Live queue refresh
-- Waitlist notification worker
-- Reminder notification worker
-- Role-specific access control
-- CSRF protection for POST forms
-- Password hashing with PHP `password_hash()` / `password_verify()`
-- Prepared PDO statements
-- Audit logging for important actions
+## Technology Stack
 
-## Reminder and waitlist workers
+| Component | Technology |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript, Bootstrap |
+| Backend | Core PHP |
+| Database | MongoDB |
+| MongoDB Library | mongodb/mongodb |
+| Email Service | PHPMailer |
+| Local Server | Apache (XAMPP) |
+| Dependency Management | Composer |
+| Version Control | Git and GitHub |
 
-From the project root, run through the XAMPP PHP CLI if configured:
+## Project Requirements
+
+Before installing MediBook, make sure you have:
+
+- Windows, Linux, or macOS
+- XAMPP or another Apache/PHP development environment
+- A compatible PHP version
+- MongoDB Community Server
+- PHP MongoDB extension (`ext-mongodb`)
+- Composer
+- Git (recommended)
+
+The PHP MongoDB extension and the Composer MongoDB library are separate requirements. Both must be installed and configured correctly.
+
+## Installation Guide
+
+### 1. Clone the Repository
+
+Open your terminal and run:
 
 ```bash
-php api/send_reminders.php
-php api/process_waitlist.php
+git clone https://github.com/khalid67-ux/doctor_appointment_system.git
 ```
 
-For a real deployment, these should be scheduled with a cron/Task Scheduler job.
+### 2. Move the Project into XAMPP
 
-## Architecture
-
-The implementation follows a three-layer web-application approach described by the proposal: presentation/UI, application logic and database persistence. fileciteturn1file2L225-L228
+Place the project inside:
 
 ```text
-Browser
-  ↓
-HTML + Bootstrap + CSS + JavaScript/AJAX
-  ↓
-PHP application
-  ↓
-PDO / MySQL
+C:\xampp\htdocs\doctor_appointment_system
 ```
 
-## Scope note
+### 3. Start XAMPP
 
-The project intentionally does not implement automated diagnosis, AI medical decision-making, emergency/ambulance dispatch, full EMR, pharmacy, insurance processing, real prescription generation, or video consultation, matching the proposal's out-of-scope items. fileciteturn2file1L96-L104
+Open the XAMPP Control Panel and start:
 
-## Academic note
+- Apache
 
-This is a local/academic project implementation. Before production deployment, add environment-based secrets, HTTPS, stronger operational logging, rate limiting, automated backups, scheduled workers, comprehensive automated tests and deployment hardening.
+MongoDB must also be running separately as a MongoDB Server service or process.
+
+### 4. Install Composer Dependencies
+
+Open a terminal inside the project root directory:
+
+```bash
+composer install
+```
+
+This installs the dependencies defined in `composer.json` and `composer.lock`.
+
+Current dependencies:
+
+- `mongodb/mongodb` — MongoDB PHP library
+- `phpmailer/phpmailer` — Email functionality
+
+### 5. Configure MongoDB
+
+Start your MongoDB Community Server.
+
+The current configuration file is:
+
+```text
+config/mongodb.php
+```
+
+The default local connection configuration is:
+
+```php
+$mongoClient = new MongoDB\Client(
+    'mongodb://127.0.0.1:27017'
+);
+
+$mongoDb = $mongoClient->selectDatabase(
+    'doctor_appointment_db'
+);
+```
+
+Default local configuration:
+
+| Setting | Value |
+|---|---|
+| Host | 127.0.0.1 |
+| Port | 27017 |
+| Database | doctor_appointment_db |
+
+If your MongoDB server uses authentication or a different connection URI, update the configuration securely.
+
+### 6. Configure PHP MongoDB Extension
+
+Make sure the MongoDB PHP extension is installed and enabled in your PHP environment.
+
+Verify it using:
+
+```bash
+php -m
+```
+
+Look for:
+
+```text
+mongodb
+```
+
+Also verify Composer dependencies:
+
+```bash
+composer show mongodb/mongodb
+```
+
+### 7. Configure Email
+
+MediBook uses PHPMailer for email-related functionality.
+
+The configuration file is:
+
+```text
+config/mail.php
+```
+
+Configure your SMTP credentials locally.
+
+**Security:** Never publish real SMTP passwords, API keys, or other credentials in the public repository.
+
+### 8. Run MediBook
+
+Open your browser:
+
+```text
+http://localhost/doctor_appointment_system/
+```
+
+Make sure Apache and MongoDB are running before accessing the application.
+
+## Database Configuration
+
+MediBook uses MongoDB as its database system.
+
+- Database name: `doctor_appointment_db`
+- Connection: MongoDB PHP Library
+- Local server: `127.0.0.1:27017`
+
+The application selects its database through the MongoDB PHP client.
+
+Database collections and initial data must be configured according to the application's actual initialization and data requirements.
+
+No MySQL or phpMyAdmin setup is required.
+
+## Security Considerations
+
+MediBook includes security-related implementation features such as:
+
+- Password hashing using PHP password functions
+- Role-based access control
+- CSRF protection
+- Server-side validation
+- Protected application workflows
+
+For secure development and deployment:
+
+- Never commit API keys or passwords.
+- Do not expose real patient information.
+- Use secure MongoDB authentication where appropriate.
+- Keep dependencies updated.
+- Use HTTPS in production.
+- Apply appropriate access controls and backups.
+- Review all configuration files before publishing.
+
+## Project Structure
+
+The repository contains separate application areas and configuration files, including:
+
+```text
+doctor_appointment_system/
+│
+├── assets/
+├── config/
+│   ├── mail.php
+│   └── mongodb.php
+│
+├── doctor/
+├── includes/
+├── patient/
+├── vendor/
+├── composer.json
+├── composer.lock
+├── .htaccess
+└── README.md
+```
+
+Additional files and modules may be present in the repository.
+
+## Development Notes
+
+MediBook is currently designed for local development using XAMPP and MongoDB.
+
+Before using it in a production environment, additional testing, security hardening, deployment configuration, monitoring, automated backups, and operational improvements are recommended.
+
+## Contributing
+
+Contributions, suggestions, bug reports, and feature improvements are welcome.
+
+If you want to contribute:
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes.
+4. Test your changes locally.
+5. Submit a Pull Request with a clear description.
+
+Please avoid committing sensitive information or unrelated changes.
+
+## Project Status
+
+MediBook is an actively maintained development project. Features, documentation, and implementation details may evolve as development continues.
+
+## License
+
+This project is intended to be released as open-source software. The applicable license and its terms should be specified in the repository's `LICENSE` file before redistribution.
+
+---
+
+**Repository:** https://github.com/khalid67-ux/doctor_appointment_system
+
+**Built with Core PHP and MongoDB.**
