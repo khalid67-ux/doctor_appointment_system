@@ -395,9 +395,44 @@ try {
     transform: translateX(3px);
 }
 
+/* =========================================
+   MediBook Scroll Reveal Animation
+========================================= */
 
+.mb-home .scroll-reveal {
+    opacity: 0;
+    transform: translateY(55px);
+    transition:
+        opacity 0.85s ease,
+        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
 
+.mb-home .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
+/* Stagger effect for cards */
+.mb-home .scroll-reveal.delay-1 {
+    transition-delay: 0.12s;
+}
+
+.mb-home .scroll-reveal.delay-2 {
+    transition-delay: 0.24s;
+}
+
+.mb-home .scroll-reveal.delay-3 {
+    transition-delay: 0.36s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mb-home .scroll-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
 
 </style>
 
@@ -999,6 +1034,97 @@ document.addEventListener('DOMContentLoaded', function () {
         counter.textContent = '0';
         requestAnimationFrame(animate);
     });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const revealCandidates = document.querySelectorAll(`
+        .mb-home .home-kicker,
+        .mb-home .home-title,
+        .mb-home .home-copy,
+        .mb-home .home-hero .btn,
+        .mb-home .trust-line,
+        .mb-home .home-visual,
+        .mb-home .stat-card,
+        .mb-home .home-section h2,
+        .mb-home .home-section > .row > div > p,
+        .mb-home .home-section .service-card,
+        .mb-home .home-section .contact-banner
+    `);
+
+    revealCandidates.forEach(function (element, index) {
+        element.classList.add('scroll-reveal');
+
+        if (element.classList.contains('service-card') ||
+            element.classList.contains('stat-card')) {
+
+            const delay = index % 4;
+
+            if (delay > 0) {
+                element.classList.add('delay-' + Math.min(delay, 3));
+            }
+        }
+    });
+
+    const targets = document.querySelectorAll('.mb-home .scroll-reveal');
+
+    let lastScrollY = window.scrollY;
+    let scrollingDown = false;
+
+    // Detect scroll direction
+    window.addEventListener('scroll', function () {
+        const currentY = window.scrollY;
+
+        scrollingDown = currentY > lastScrollY;
+        lastScrollY = currentY;
+    }, { passive: true });
+
+    function revealPreviousSections() {
+        targets.forEach(function (element) {
+            const rect = element.getBoundingClientRect();
+
+            // Current viewport and all sections above it are visible
+            if (rect.top < window.innerHeight) {
+                element.classList.add('is-visible');
+            }
+        });
+    }
+
+    window.addEventListener('load', function () {
+        requestAnimationFrame(function () {
+            requestAnimationFrame(revealPreviousSections);
+        });
+    });
+
+    window.addEventListener('pageshow', revealPreviousSections);
+
+    const observer = new IntersectionObserver(function (entries) {
+
+        entries.forEach(function (entry) {
+
+            if (!entry.isIntersecting) return;
+
+            // Reveal only when scrolling downward
+            if (scrollingDown) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+
+        });
+
+    }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+    });
+
+    targets.forEach(function (element) {
+        if (!element.classList.contains('is-visible')) {
+            observer.observe(element);
+        }
+    });
+
 });
 </script>
 
