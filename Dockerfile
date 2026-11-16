@@ -16,6 +16,6 @@ COPY . /var/www/html/
 
 WORKDIR /var/www/html
 RUN rm -rf vendor composer.lock \
-    && composer require "mongodb/mongodb:^2.0" --no-interaction --no-dev --optimize-autoloader
+    && composer require "mongodb/mongodb:^2.0" --no-interaction --optimize-autoloader
 
 EXPOSE 80
