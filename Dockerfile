@@ -18,4 +18,6 @@ WORKDIR /var/www/html
 RUN rm -rf vendor composer.lock \
     && composer require "mongodb/mongodb:^2.0" --no-interaction --optimize-autoloader
 
+    RUN echo "output_buffering=4096" > /usr/local/etc/php/conf.d/custom.ini
+
 EXPOSE 80
