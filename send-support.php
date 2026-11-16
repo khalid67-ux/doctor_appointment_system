@@ -5,14 +5,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/auth.php';
 
-// sendMailViaBrevo() যদি আলাদা ফাইলে থাকে, সেটা লোড করা হবে।
-// ফাইলের নাম আলাদা হলে নিচের নামটা বদলে দিন।
-if (!function_exists('sendMailViaBrevo')) {
-    $mailHelper = __DIR__ . '/includes/mail.php';
-    if (is_file($mailHelper)) {
-        require_once $mailHelper;
-    }
-}
+require_once __DIR__ . '/includes/brevo_mailer.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: index.php#contact');
