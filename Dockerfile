@@ -1,7 +1,9 @@
 FROM php:8.2-apache
 
-# Install required system packages and PHP mongodb extension
+# Install required system packages, build tools, and PHP mongodb extension
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    pkg-config \
     libssl-dev \
     git \
     unzip \
