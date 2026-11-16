@@ -1,12 +1,11 @@
-
 <?php
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 try {
-    $mongoClient = new MongoDB\Client(
-        'mongodb://127.0.0.1:27017'
-    );
+    $uri = getenv('MONGODB_URI') ?: 'mongodb+srv://medibook:23w5m923dt@cluster0.dum4bn7.mongodb.net/?retryWrites=true&w=majority';
+
+    $mongoClient = new MongoDB\Client($uri);
 
     $mongoDb = $mongoClient->selectDatabase(
         'doctor_appointment_db'
