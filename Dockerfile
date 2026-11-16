@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     git \
     unzip \
+    && rm -rf /var/lib/apt/lists/* \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
@@ -16,8 +17,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy project files to container web root
 COPY . /var/www/html/
 
-# Set working directory and install composer packages freshly
+# Set working directory, remove old lock/vendor, and install compatible mongodb library
 WORKDIR /var/www/html
-RUN composer install --no-dev --optimize-autoloader
+RUN rm -rf vendor composer.lock \
+    && composer require mongodb/mongodb --no-interaction --no-dev --optimize-autoloader
 
 EXPOSE 80
