@@ -1,10 +1,18 @@
-
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/auth.php';
+
+// sendMailViaBrevo() যদি আলাদা ফাইলে থাকে, সেটা লোড করা হবে।
+// ফাইলের নাম আলাদা হলে নিচের নামটা বদলে দিন।
+if (!function_exists('sendMailViaBrevo')) {
+    $mailHelper = __DIR__ . '/includes/mail.php';
+    if (is_file($mailHelper)) {
+        require_once $mailHelper;
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: index.php#contact');
@@ -13,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 verify_csrf();
 
-$name = trim($_POST['name'] ?? '');
-$email = trim($_POST['email'] ?? '');
+$name    = trim($_POST['name'] ?? '');
+$email   = trim($_POST['email'] ?? '');
 $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
@@ -32,77 +40,48 @@ if (
     exit('Invalid form information. Please go back and check your entries.');
 }
 
-$mailConfig = require __DIR__ . '/config/mail.php';
-
-if (
-    empty($mailConfig['username']) ||
-    empty($mailConfig['password']) ||
-    $mailConfig['password'] === 'YOUR_GMAIL_APP_PASSWORD'
-) {
-    error_log('MediBook SMTP credentials have not been configured.');
+if (!function_exists('sendMailViaBrevo')) {
+    error_log('sendMailViaBrevo() function was not found. Check the require_once path.');
     http_response_code(500);
     exit('Email service is not configured yet. Please contact the administrator.');
 }
 
-$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+$mailConfig = require __DIR__ . '/config/mail.php';
+
+$safeName    = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+$safeEmail   = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+$safeSubject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+$safeMessage = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
+
+$html = "
+    <h2>New MediBook Support Message</h2>
+    <p><strong>Name:</strong> {$safeName}</p>
+    <p><strong>Email:</strong> {$safeEmail}</p>
+    <p><strong>Subject:</strong> {$safeSubject}</p>
+    <p><strong>Message:</strong><br>{$safeMessage}</p>
+";
 
 try {
-    $mail->isSMTP();
-    $mail->Host       = $mailConfig['host'];
-    $mail->SMTPAuth   = true;
-    $mail->Username   = $mailConfig['username'];
-    $mail->Password   = $mailConfig['password'];
-    $mail->Port       = (int) $mailConfig['port'];
-    $mail->SMTPSecure = $mailConfig['encryption'];
-
-    $mail->CharSet = 'UTF-8';
-
-    $mail->setFrom(
-        $mailConfig['from_email'],
-        $mailConfig['from_name']
+    $sent = sendMailViaBrevo(
+        $mailConfig['to_email'],
+        'MediBook Support',
+        'MediBook Support: ' . $subject,
+        $html,
+        $email,   // Reply-To: ভিজিটরের ইমেইল
+        $name
     );
-
-    $mail->addAddress($mailConfig['to_email']);
-
-    // Replies will go to the visitor's supplied email.
-    $mail->addReplyTo($email, $name);
-
-    $mail->Subject = 'MediBook Support: ' . $subject;
-
-    $safeName = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
-    $safeEmail = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
-    $safeSubject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
-    $safeMessage = nl2br(
-        htmlspecialchars($message, ENT_QUOTES, 'UTF-8')
-    );
-
-    $mail->isHTML(true);
-    $mail->Body = "
-        <h2>New MediBook Support Message</h2>
-        <p><strong>Name:</strong> {$safeName}</p>
-        <p><strong>Email:</strong> {$safeEmail}</p>
-        <p><strong>Subject:</strong> {$safeSubject}</p>
-        <p><strong>Message:</strong><br>{$safeMessage}</p>
-    ";
-
-    $mail->AltBody =
-        "New MediBook Support Message\n\n" .
-        "Name: {$name}\n" .
-        "Email: {$email}\n" .
-        "Subject: {$subject}\n\n" .
-        "Message:\n{$message}";
-
-    $mail->send();
-
-    header('Location: index.php?contact=success#contact');
-    exit;
-
 } catch (\Throwable $e) {
     error_log('MediBook support email failed: ' . $e->getMessage());
-
-    http_response_code(500);
-    exit(
-        'Sorry, your message could not be sent. ' .
-        'Please try again later or call 01889106270.'
-    );
+    $sent = false;
 }
+
+if ($sent) {
+    header('Location: index.php?contact=success#contact');
+    exit;
+}
+
+http_response_code(500);
+exit(
+    'Sorry, your message could not be sent. ' .
+    'Please try again later or call 01889106270.'
+);
