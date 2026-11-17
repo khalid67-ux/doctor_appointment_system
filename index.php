@@ -1065,7 +1065,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const duration = 1400;
 
-    counters.forEach(function (counter) {
+    const reduceMotion = window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function runCounter(counter) {
         const target = Number(counter.dataset.target);
 
         if (!Number.isSafeInteger(target) || target < 0) {
@@ -1092,8 +1095,52 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        counter.textContent = '0';
         requestAnimationFrame(animate);
+
+    }
+
+    function showFinal(counter) {
+        const target = Number(counter.dataset.target);
+
+        if (Number.isSafeInteger(target) && target >= 0) {
+            counter.textContent = target.toLocaleString();
+        }
+    }
+
+    // অ্যানিমেশন সাপোর্ট না থাকলে বা motion কমানো থাকলে সরাসরি চূড়ান্ত সংখ্যা দেখাও
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+        counters.forEach(showFinal);
+        return;
+    }
+
+    // শুরুতে সব সংখ্যা 0 থাকবে
+    counters.forEach(function (counter) {
+        counter.textContent = '0';
+    });
+
+    // কার্ড স্ক্রিনে আসলে তবেই গোনা শুরু হবে (একবারই)
+    const counterObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+
+            const counter = entry.target.querySelector(
+                '.stat-number[data-target]'
+            );
+
+            if (counter) {
+                runCounter(counter);
+            }
+
+            counterObserver.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.6,
+        rootMargin: '0px 0px -40px 0px'
+    });
+
+    counters.forEach(function (counter) {
+        const card = counter.closest('.stat-card') || counter;
+        counterObserver.observe(card);
     });
 });
 </script>
