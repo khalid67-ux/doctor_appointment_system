@@ -938,4 +938,17 @@ function create_appointment_reminder(
     return true;
 }
 
+function doctor_photo_url($path, string $prefix = '../'): string
+{
+    if (
+        is_string($path) &&
+        str_starts_with($path, 'uploads/doctors/') &&
+        basename($path) === substr($path, strlen('uploads/doctors/'))
+    ) {
+        return $prefix . $path;
+    }
+
+    return '';
+}
+
 ?>

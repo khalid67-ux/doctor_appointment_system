@@ -229,6 +229,13 @@ function doctorRatingStars(float $rating): string
 
             <div class="col-lg-8">
 
+                <?php $photoUrl = doctor_photo_url($d['profile_image'] ?? ''); ?>
+                <?php if ($photoUrl !== ''): ?>
+                    <img src="<?= h($photoUrl) ?>"
+                         alt="Dr. <?= h($d['name']) ?>"
+                         class="doctor-photo mb-3">
+                <?php endif; ?>
+
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                     <h2 class="doctor-name mb-0">
                         Dr. <?= h($d['name']) ?>
@@ -634,6 +641,15 @@ function doctorRatingStars(float $rating): string
 .doctor-name {
     font-weight: 700;
     letter-spacing: -0.4px;
+}
+
+.doctor-photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
 }
 
 .doctor-specialization {

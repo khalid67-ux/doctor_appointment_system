@@ -325,6 +325,7 @@ foreach ($doctorDocs as $doctorDoc) {
         'consultation_fee' => $fee,
         'verification_status' => $doctor['verification_status'] ?? '',
         'doctor_name' => $doctorName,
+        'profile_image' => $doctor['profile_image'] ?? '',
         'specialization' => $specialization,
         'avg_rating' => $averageRating,
         'review_count' => $reviewCount,
@@ -664,17 +665,14 @@ $doctors = array_slice($doctors, 0, 50);
                 <div class="doctor-card-top">
 
                     <div class="doctor-avatar">
-
-                        <?= h(
-                            strtoupper(
-                                substr(
-                                    $doctor['doctor_name'],
-                                    0,
-                                    1
-                                )
-                            )
-                        ) ?>
-
+                        <?php $photoUrl = doctor_photo_url($doctor['profile_image'] ?? ''); ?>
+                        <?php if ($photoUrl !== ''): ?>
+                            <img src="<?= h($photoUrl) ?>"
+                                 alt="Dr. <?= h($doctor['doctor_name']) ?>"
+                                 loading="lazy">
+                        <?php else: ?>
+                            <?= h(strtoupper(substr($doctor['doctor_name'], 0, 1))) ?>
+                        <?php endif; ?>
                     </div>
 
 
@@ -1070,6 +1068,18 @@ $doctors = array_slice($doctors, 0, 50);
     color: var(--primary);
     font-size: 1.4rem;
     font-weight: 800;
+}
+
+.doctor-avatar {
+    overflow: hidden;
+}
+
+.doctor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
 }
 
 .doctor-main-info {
