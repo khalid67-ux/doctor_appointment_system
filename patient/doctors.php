@@ -1525,6 +1525,8 @@ $doctors = array_slice($doctors, 0, 50);
 
 .doctor-main-info h3 {
     max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 @media (max-width: 700px) {
