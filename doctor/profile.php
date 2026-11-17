@@ -77,28 +77,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        $uploadDirectory = __DIR__ . '/../uploads/doctors/';
+        $photoBytes = file_get_contents($photo['tmp_name']);
+        $storedMime = $mimeType;
 
+        if ($photoBytes === false || $photoBytes === '') {
+            flash('danger', 'Could not read your profile photo.');
+            header('Location: profile.php');
+            exit;
+        }
+
+        // GD থাকলে ছবি ছোট (সর্বোচ্চ 700px) করে JPEG হিসেবে রাখা হবে
         if (
-            !is_dir($uploadDirectory) &&
-            !mkdir($uploadDirectory, 0755, true)
+            function_exists('imagecreatefromstring') &&
+            function_exists('imagejpeg')
         ) {
-            flash('danger', 'Could not create the image upload folder.');
-            header('Location: profile.php');
-            exit;
+            $source = @imagecreatefromstring($photoBytes);
+
+            if ($source !== false) {
+                $width = imagesx($source);
+                $height = imagesy($source);
+                $scale = min(1, 700 / max($width, $height));
+                $newWidth = max(1, (int) round($width * $scale));
+                $newHeight = max(1, (int) round($height * $scale));
+
+                $canvas = imagecreatetruecolor($newWidth, $newHeight);
+                imagefill(
+                    $canvas,
+                    0,
+                    0,
+                    imagecolorallocate($canvas, 255, 255, 255)
+                );
+                imagecopyresampled(
+                    $canvas,
+                    $source,
+                    0,
+                    0,
+                    0,
+                    0,
+                    $newWidth,
+                    $newHeight,
+                    $width,
+                    $height
+                );
+
+                ob_start();
+                imagejpeg($canvas, null, 85);
+                $resized = ob_get_clean();
+
+                imagedestroy($canvas);
+                imagedestroy($source);
+
+                if (is_string($resized) && $resized !== '') {
+                    $photoBytes = $resized;
+                    $storedMime = 'image/jpeg';
+                }
+            }
         }
 
-        $fileName = bin2hex(random_bytes(16))
-            . '.' . $allowedTypes[$mimeType];
-
-        $destination = $uploadDirectory . $fileName;
-        $relativePath = 'uploads/doctors/' . $fileName;
-
-        if (!move_uploaded_file($photo['tmp_name'], $destination)) {
-            flash('danger', 'Could not upload your profile photo.');
-            header('Location: profile.php');
-            exit;
-        }
+        $version = time();
+        $relativePath = 'doctor-photo.php?id=' . (int) $doctor_id . '&v=' . $version;
 
         try {
             $oldPhotoDocument = $doctorsCollection->findOne([
@@ -107,15 +144,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $oldPhoto = $oldPhotoDocument['profile_image'] ?? '';
 
+            $mongoDb->selectCollection('doctor_photos')->replaceOne(
+                ['doctor_id' => (int) $doctor_id],
+                [
+                    'doctor_id' => (int) $doctor_id,
+                    'mime' => $storedMime,
+                    'data' => new MongoDB\BSON\Binary(
+                        $photoBytes,
+                        MongoDB\BSON\Binary::TYPE_GENERIC
+                    ),
+                    'updated_at' => new MongoDB\BSON\UTCDateTime(),
+                ],
+                ['upsert' => true]
+            );
+
             $photoUpdate = $doctorsCollection->updateOne(
                 ['doctor_id' => (int) $doctor_id],
                 ['$set' => ['profile_image' => $relativePath]]
             );
 
             if ($photoUpdate->getMatchedCount() === 0) {
-                @unlink($destination);
                 flash('danger', 'Profile photo could not be saved.');
             } else {
+                // আগের লোকাল ফাইল থাকলে মুছে ফেলা
                 if (
                     is_string($oldPhoto) &&
                     str_starts_with($oldPhoto, 'uploads/doctors/') &&
@@ -138,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 flash('success', 'Profile photo updated successfully.');
             }
         } catch (Throwable $e) {
-            @unlink($destination);
+            error_log('Profile photo save error: ' . $e->getMessage());
             flash('danger', 'An error occurred while saving your profile photo.');
         }
 
@@ -362,15 +413,7 @@ if ($verification === 'Approved') {
 
 $profileImage = $doctor['profile_image'] ?? '';
 
-$profileImageUrl = '';
-
-if (
-    is_string($profileImage) &&
-    str_starts_with($profileImage, 'uploads/doctors/') &&
-    basename($profileImage) === substr($profileImage, strlen('uploads/doctors/'))
-) {
-    $profileImageUrl = '../' . $profileImage;
-}
+$profileImageUrl = doctor_photo_url($profileImage);
 
 require '../includes/header.php';
 

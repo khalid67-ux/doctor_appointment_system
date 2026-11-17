@@ -940,10 +940,20 @@ function create_appointment_reminder(
 
 function doctor_photo_url($path, string $prefix = '../'): string
 {
+    if (!is_string($path) || $path === '') {
+        return '';
+    }
+
+    // নতুন পদ্ধতি: ছবি MongoDB-তে থাকে
+    if (preg_match('/^doctor-photo\.php\?id=\d+&v=\d+$/', $path)) {
+        return $prefix . $path;
+    }
+
+    // পুরনো পদ্ধতি: সার্ভারের ফাইল (ফাইল না থাকলে খালি, তখন অক্ষর দেখাবে)
     if (
-        is_string($path) &&
         str_starts_with($path, 'uploads/doctors/') &&
-        basename($path) === substr($path, strlen('uploads/doctors/'))
+        basename($path) === substr($path, strlen('uploads/doctors/')) &&
+        is_file(dirname(__DIR__) . '/' . $path)
     ) {
         return $prefix . $path;
     }
