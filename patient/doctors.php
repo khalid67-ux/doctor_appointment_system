@@ -1516,6 +1516,35 @@ $doctors = array_slice($doctors, 0, 50);
     margin: 0;
 }
 
+
+/* ===== Mobile overflow fix: grid columns must be allowed to shrink ===== */
+.professional-doctor-card,
+.doctor-main-info {
+    min-width: 0;
+}
+
+.doctor-main-info h3 {
+    max-width: 100%;
+}
+
+@media (max-width: 700px) {
+    .doctor-results-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .doctor-filter-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+
+
+
+
+    
+
 </style>
 
 
