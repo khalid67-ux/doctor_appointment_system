@@ -18,6 +18,10 @@ WORKDIR /var/www/html
 RUN rm -rf vendor composer.lock \
     && composer require "mongodb/mongodb:^2.0" --no-interaction --optimize-autoloader
 
-    RUN echo "output_buffering=4096" > /usr/local/etc/php/conf.d/custom.ini
+RUN printf "output_buffering=4096\nupload_max_filesize=5M\npost_max_size=8M\n" > /usr/local/etc/php/conf.d/custom.ini
+
+RUN mkdir -p /var/www/html/uploads/doctors \
+    && chown -R www-data:www-data /var/www/html/uploads \
+    && chmod -R 775 /var/www/html/uploads
 
 EXPOSE 80
