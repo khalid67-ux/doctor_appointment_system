@@ -434,6 +434,67 @@ try {
     }
 }
 
+/* ===== Mobile fixes: hero image + stat cards ===== */
+.mb-home .stat-card > div:last-child {
+    min-width: 0;
+}
+
+@media (max-width: 767.98px) {
+    .mb-home .home-hero {
+        align-items: flex-start;
+        min-height: 0;
+        padding: 270px 20px 28px;
+        background:
+            linear-gradient(
+                180deg,
+                rgba(245, 249, 255, 0) 0,
+                rgba(245, 249, 255, 0) 190px,
+                #f5f9ff 265px
+            ),
+            url("assets/images/medibook-hero.png")
+            90% top / auto 270px no-repeat,
+            #f5f9ff;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .mb-home .stat-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 16px;
+    }
+
+    .mb-home .stat-icon {
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.15rem;
+    }
+
+    .mb-home .stat-card > div:last-child {
+        width: 100%;
+    }
+
+    .mb-home .stat-number {
+        font-size: 1.6rem;
+    }
+
+    .mb-home .stat-label {
+        font-size: .85rem;
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+    }
+}
+
+
+
+
+
+
+
+    
+
 </style>
 
 <main class="mb-home">
