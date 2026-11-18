@@ -96,260 +96,265 @@ require 'includes/header.php';
 ?>
 <style>
 .user-login-page {
-    background: #f4f7fc;
-    padding: 30px 15px;
-    min-height: auto;
+    min-height: 72vh;
+    padding: 40px 15px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(37, 99, 235, .10), transparent 38%),
+        radial-gradient(circle at 88% 92%, rgba(53, 184, 241, .12), transparent 38%),
+        #f4f7fc;
 }
 
-.user-login-layout {
+.user-login-card {
     width: 100%;
-    max-width: 740px;
-    display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
+    max-width: 440px;
+    padding: 30px 32px 26px;
     background: #fff;
     border: 1px solid #e6ebf3;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 12px 35px rgba(25, 50, 90, .08);
+    border-radius: 20px;
+    box-shadow: 0 18px 45px rgba(25, 50, 90, .10);
 }
 
-.user-login-banner {
-    padding: 20px 22px;
-    color: #fff;
-    background: linear-gradient(145deg, #2152df, #35b8f1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.user-login-head {
+    text-align: center;
+    margin-bottom: 26px;
 }
 
 .user-login-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    background: rgba(255,255,255,.18);
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 14px;
     display: grid;
     place-items: center;
-    font-size: 25px;
-    margin-bottom: 14px;
+    font-size: 26px;
+    color: #2563eb;
+    background: #eaf2ff;
+    border-radius: 16px;
 }
 
-.user-login-banner h2 {
-    font-weight: 800;
-    font-size: 23px;
+.user-login-eyebrow {
     margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    color: #2563eb;
 }
 
-.user-login-banner p {
-    color: rgba(255,255,255,.9);
-    line-height: 1.45;
-    font-size: 14px;
-    margin-bottom: 12px;
+.user-login-head h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f172a;
 }
 
-.user-login-form {
-    padding: 20px 24px;
+.user-login-head p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #64748b;
 }
 
-.user-login-banner .d-flex {
-    margin-bottom: 8px !important;
-    font-size: 14px;
-}
-
-.user-login-form .form-label {
+.user-login-card .form-label {
+    margin-bottom: 6px;
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 6px;
+    color: #1e293b;
 }
 
-.user-login-form .input-group-text,
-.user-login-form .form-control {
-    min-height: 42px;
-    font-size: 14px;
+.user-login-card .input-group-text,
+.user-login-card .form-control {
+    min-height: 46px;
+    font-size: 15px;
     border-color: #dce4ef;
 }
 
-.user-login-form .input-group-text {
-    border-radius: 9px 0 0 9px;
+.user-login-card .input-group-text {
+    border-radius: 10px 0 0 10px;
 }
 
-.user-login-form .form-control {
+.user-login-card .input-group > .form-control:last-child,
+.user-login-card .input-group > .btn:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.user-login-card .input-group > .btn {
+    min-width: 48px;
+}
+
+.user-login-card .form-control {
     min-width: 0;
 }
 
-.user-login-form .input-group > .btn {
-    min-width: 46px;
-    font-size: 14px;
+.user-login-card .form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .15);
 }
 
-.user-login-form .btn-login {
-    min-height: 43px;
-    border-radius: 9px;
+.user-login-card .input-group:focus-within .input-group-text {
+    border-color: #2563eb;
+}
+
+.user-login-card .btn-login {
+    min-height: 48px;
+    border-radius: 10px;
     font-size: 15px;
     font-weight: 700;
     background: #2563eb;
     border-color: #2563eb;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, .22);
+    transition: transform .15s ease, box-shadow .15s ease;
 }
 
-@media (max-width: 767px) {
+.user-login-card .btn-login:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.user-login-card .btn-login:disabled {
+    opacity: .85;
+    transform: none;
+}
+
+@media (max-width: 575px) {
     .user-login-page {
-        padding: 25px 12px;
+        padding: 24px 12px;
     }
 
-    .user-login-layout {
-        grid-template-columns: 1fr;
+    .user-login-card {
+        padding: 24px 20px 22px;
+        border-radius: 16px;
     }
 
-    .user-login-banner {
-        padding: 20px 22px;
-    }
-
-    .user-login-icon {
-        width: 46px;
-        height: 46px;
-        font-size: 25px;
-        margin-bottom: 14px;
-    }
-
-    .user-login-banner h2 {
-        font-size: 23px;
-    }
-
-    .user-login-form {
-        padding: 20px 24px;
+    .user-login-head h1 {
+        font-size: 24px;
     }
 }
 </style>
 
 <div class="user-login-page">
-    <div class="user-login-layout">
+    <div class="user-login-card">
 
-        <section class="user-login-banner">
+        <div class="user-login-head">
             <div class="user-login-icon">
                 <i class="bi bi-heart-pulse-fill"></i>
             </div>
 
-            <div class="small fw-bold mb-3">
-                MEDIBOOK HEALTHCARE PORTAL
-            </div>
+            <div class="user-login-eyebrow">MEDIBOOK HEALTHCARE PORTAL</div>
 
-            <h2>Welcome back!</h2>
+            <h1>Welcome back!</h1>
 
-            <p class="mt-3 mb-4">
+            <p>
                 Sign in to access your MediBook account and manage
                 your healthcare journey.
             </p>
+        </div>
 
-            <div class="d-flex align-items-center gap-3 mb-3">
-                <i class="bi bi-shield-check fs-5"></i>
-                <span>Secure account access</span>
+        <?php if ($error): ?>
+            <div class="alert alert-danger d-flex gap-2" role="alert">
+                <i class="bi bi-exclamation-circle-fill mt-1"></i>
+                <div><?= h($error) ?></div>
             </div>
+        <?php endif; ?>
 
-            <div class="d-flex align-items-center gap-3">
-                <i class="bi bi-calendar2-check fs-5"></i>
-                <span>Convenient appointment management</span>
-            </div>
-        </section>
+        <form method="POST" novalidate>
+            <?= csrf_field() ?>
 
-        <section class="user-login-form">
             <div class="mb-3">
-                <div class="mini-label mb-2">SECURE ACCESS</div>
+                <label for="email" class="form-label">
+                    Email Address
+                </label>
 
-                <h1 class="h3 fw-bold mb-2">Sign In</h1>
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-envelope text-primary"></i>
+                    </span>
 
-                <p class="text-secondary mb-0">
-                    Enter your credentials to continue.
-                </p>
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        value="<?= h($_POST['email'] ?? '') ?>"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
             </div>
 
-            <?php if ($error): ?>
-                <div class="alert alert-danger d-flex gap-2" role="alert">
-                    <i class="bi bi-exclamation-circle-fill mt-1"></i>
-                    <div><?= h($error) ?></div>
+            <div class="mb-4">
+                <label for="password" class="form-label">
+                    Password
+                </label>
+
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-lock text-primary"></i>
+                    </span>
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="togglePassword"
+                        aria-label="Show password"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
                 </div>
-            <?php endif; ?>
-
-            <form method="POST" novalidate>
-                <?= csrf_field() ?>
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">
-                        Email Address
-                    </label>
-
-                    <div class="input-group">
-                        <span class="input-group-text bg-white">
-                            <i class="bi bi-envelope text-primary"></i>
-                        </span>
-
-                        <input
-                            type="email"
-                            class="form-control"
-                            id="email"
-                            name="email"
-                            value="<?= h($_POST['email'] ?? '') ?>"
-                            placeholder="you@example.com"
-                            autocomplete="email"
-                            required
-                        >
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">
-                        Password
-                    </label>
-
-                    <div class="input-group">
-                        <span class="input-group-text bg-white">
-                            <i class="bi bi-lock text-primary"></i>
-                        </span>
-
-                        <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            name="password"
-                            placeholder="Enter your password"
-                            autocomplete="current-password"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="btn btn-outline-secondary"
-                            id="togglePassword"
-                            aria-label="Show password"
-                        >
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center gap-2 mb-3 text-secondary small">
-                    <i class="bi bi-shield-check text-success"></i>
-                    Your account information is protected.
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-login w-100">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>
-                    Sign In
-                </button>
-            </form>
-
-            <div class="text-center mt-4">
-                <span class="text-secondary">Don't have an account?</span>
-                <a href="register.php"
-                   class="text-primary fw-semibold text-decoration-none">
-                    Create Account
-                </a>
             </div>
-        </section>
+
+            <button type="submit" class="btn btn-primary btn-login w-100">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <span class="text-secondary">Don't have an account?</span>
+            <a href="register.php"
+               class="text-primary fw-semibold text-decoration-none">
+                Create Account
+            </a>
+        </div>
 
     </div>
 </div>
+
+<script>
+(function () {
+    var form = document.querySelector('.user-login-card form');
+    if (!form) return;
+
+    var button = form.querySelector('button[type="submit"]');
+    var original = button.innerHTML;
+
+    form.addEventListener('submit', function () {
+        button.disabled = true;
+        button.innerHTML =
+            '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Signing in...';
+    });
+
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            button.disabled = false;
+            button.innerHTML = original;
+        }
+    });
+})();
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

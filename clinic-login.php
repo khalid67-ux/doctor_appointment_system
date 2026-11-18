@@ -51,87 +51,145 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body {
-            background: #f4f7fb;
-        }
-
-        .clinic-login-card {
-            max-width: 740px;
-            width: 100%;
-            overflow: hidden;
-            border: 1px solid #e6ebf3;
-            border-radius: 18px;
-            box-shadow: 0 12px 35px rgba(25, 50, 90, .08);
-        }
-
-        .clinic-login-intro {
-            min-height: 100%;
-            padding: 24px;
-            color: #fff;
-            background: linear-gradient(145deg, #2152df, #35b8f1);
-        }
-
-        .clinic-login-form {
-            padding: 24px;
-        }
-
-        .clinic-login-intro h1 {
-            font-size: 23px;
-            font-weight: 800;
-        }
-
-        .clinic-login-intro p {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .clinic-login-form h2 {
-            font-size: 24px;
-        }
-
-        .clinic-login-form .form-label {
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-
-        .clinic-login-form .form-control,
-        .clinic-login-form .input-group-text {
-            min-height: 42px;
-            font-size: 14px;
-        }
-
-        .clinic-login-form .btn {
-            min-height: 42px;
-            font-size: 14px;
+            background: #f4f7fc;
         }
 
         .clinic-login-main {
             min-height: calc(100vh - 72px);
+            padding: 40px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 12% 8%, rgba(37, 99, 235, .10), transparent 38%),
+                radial-gradient(circle at 88% 92%, rgba(53, 184, 241, .12), transparent 38%),
+                #f4f7fc;
         }
 
-        @media (max-width: 767.98px) {
-            .clinic-login-intro,
-            .clinic-login-form {
-                padding: 22px 18px;
-            }
-
-            .clinic-login-form h2 {
-                font-size: 21px;
-            }
+        .clinic-login-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 30px 32px 26px;
+            background: #fff;
+            border: 1px solid #e6ebf3;
+            border-radius: 20px;
+            box-shadow: 0 18px 45px rgba(25, 50, 90, .10);
         }
 
-        .clinic-login-intro h1 {
-            color: #fff;
-            font-size: 24px;
+        .clinic-login-head {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .clinic-login-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 14px;
+            display: grid;
+            place-items: center;
+            font-size: 26px;
+            color: #2563eb;
+            background: #eaf2ff;
+            border-radius: 16px;
+        }
+
+        .clinic-login-eyebrow {
+            margin-bottom: 8px;
+            font-size: 12px;
             font-weight: 800;
-            margin-bottom: 12px;
+            letter-spacing: .08em;
+            color: #2563eb;
         }
 
-        .clinic-login-intro p {
-            color: #fff !important;
+        .clinic-login-head h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .clinic-login-head p {
+            margin: 0;
             font-size: 15px;
-            line-height: 1.7;
-            opacity: 1 !important;
-            margin-bottom: 18px;
+            line-height: 1.55;
+            color: #64748b;
+        }
+
+        .clinic-login-card .form-label {
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .clinic-login-card .input-group-text,
+        .clinic-login-card .form-control {
+            min-height: 46px;
+            font-size: 15px;
+            border-color: #dce4ef;
+        }
+
+        .clinic-login-card .input-group-text {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .clinic-login-card .input-group > .form-control:last-child,
+        .clinic-login-card .input-group > .btn:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+
+        .clinic-login-card .input-group > .btn {
+            min-width: 48px;
+        }
+
+        .clinic-login-card .form-control {
+            min-width: 0;
+        }
+
+        .clinic-login-card .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .15);
+        }
+
+        .clinic-login-card .input-group:focus-within .input-group-text {
+            border-color: #2563eb;
+        }
+
+        .clinic-login-card .btn-login {
+            min-height: 48px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            background: #2563eb;
+            border-color: #2563eb;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, .22);
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .clinic-login-card .btn-login:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .clinic-login-card .btn-login:disabled {
+            opacity: .85;
+            transform: none;
+        }
+
+        @media (max-width: 575px) {
+            .clinic-login-main {
+                padding: 24px 12px;
+            }
+
+            .clinic-login-card {
+                padding: 24px 20px 22px;
+                border-radius: 16px;
+            }
+
+            .clinic-login-head h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -167,74 +225,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </nav>
 
-<main class="container clinic-login-main d-flex align-items-center justify-content-center py-5">
-    <div class="card clinic-login-card w-100">
-        <div class="row g-0">
-            <section class="col-md-5 clinic-login-intro d-flex flex-column justify-content-center">
-                <div class="mb-4">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-25"
-                          style="width:58px;height:58px">
-                        <i class="bi bi-hospital fs-3"></i>
-                    </span>
-                </div>
-                <p class="text-white fw-bold mb-3"
-                   style="font-size: 12px; letter-spacing: .5px;">
-                    MEDIBOOK HEALTHCARE PORTAL
-                </p>
-                <h1 class="h4 fw-bold mb-3 text-dark">Welcome back</h1>
-                <p class="mb-0 text-white-50">
-                    Sign in to manage your clinic profile and branch locations.
-                </p>
-            </section>
+<main class="clinic-login-main">
+    <div class="clinic-login-card">
 
-            <section class="col-md-7 clinic-login-form">
-                <h2 class="h4 fw-bold mb-2">Hospital Portal Login</h2>
-                <p class="text-secondary mb-4">Use your registered clinic account.</p>
+        <div class="clinic-login-head">
+            <div class="clinic-login-icon">
+                <i class="bi bi-hospital"></i>
+            </div>
 
-                <?php if ($error !== ''): ?>
-                    <div class="alert alert-danger" role="alert"><?= h($error) ?></div>
-                <?php endif; ?>
+            <div class="clinic-login-eyebrow">HOSPITAL PORTAL</div>
 
-                <form method="post">
-                    <?= csrf_field() ?>
+            <h1>Welcome back</h1>
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label fw-semibold">Registered Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white">
-                                <i class="bi bi-envelope text-primary"></i>
-                            </span>
-                            <input type="email" id="email" name="email" class="form-control"
-                                   autocomplete="username" placeholder="name@clinic.com" required>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="password" class="form-label fw-semibold">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white">
-                                <i class="bi bi-lock text-primary"></i>
-                            </span>
-                            <input type="password" id="password" name="password" class="form-control"
-                                   autocomplete="current-password" placeholder="Enter your password" required>
-                            <button type="button" class="btn btn-outline-secondary" id="togglePassword"
-                                    aria-label="Show password">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary btn-lg w-100" type="submit">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                    </button>
-                </form>
-
-                <p class="text-center text-secondary small mt-4 mb-0">
-                    Use the email and password submitted during hospital registration.
-                    <a href="clinic-register.php" class="text-decoration-none fw-semibold">Register Hospital</a>
-                </p>
-            </section>
+            <p>Sign in to manage your clinic profile and branch locations.</p>
         </div>
+
+        <?php if ($error !== ''): ?>
+            <div class="alert alert-danger" role="alert"><?= h($error) ?></div>
+        <?php endif; ?>
+
+        <form method="post">
+            <?= csrf_field() ?>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Registered Email</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-envelope text-primary"></i>
+                    </span>
+                    <input type="email" id="email" name="email" class="form-control"
+                           autocomplete="username" placeholder="name@clinic.com" required>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-lock text-primary"></i>
+                    </span>
+                    <input type="password" id="password" name="password" class="form-control"
+                           autocomplete="current-password" placeholder="Enter your password" required>
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword"
+                            aria-label="Show password">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-login w-100" type="submit">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <span class="text-secondary">New hospital?</span>
+            <a href="clinic-register.php"
+               class="text-primary fw-semibold text-decoration-none">
+                Register Hospital
+            </a>
+        </div>
+
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -247,6 +298,28 @@ document.getElementById('togglePassword')?.addEventListener('click', function ()
     icon.classList.toggle('bi-eye');
     icon.classList.toggle('bi-eye-slash');
 });
+</script>
+<script>
+(function () {
+    var form = document.querySelector('.clinic-login-card form');
+    if (!form) return;
+
+    var button = form.querySelector('button[type="submit"]');
+    var original = button.innerHTML;
+
+    form.addEventListener('submit', function () {
+        button.disabled = true;
+        button.innerHTML =
+            '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Signing in...';
+    });
+
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            button.disabled = false;
+            button.innerHTML = original;
+        }
+    });
+})();
 </script>
 </body>
 </html>
