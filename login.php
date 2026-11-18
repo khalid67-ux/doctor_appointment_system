@@ -95,16 +95,18 @@ require 'includes/header.php';
 
 ?>
 <style>
-.user-login-page {
-    min-height: 72vh;
-    padding: 40px 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+body {
     background:
         radial-gradient(circle at 12% 8%, rgba(37, 99, 235, .10), transparent 38%),
         radial-gradient(circle at 88% 92%, rgba(53, 184, 241, .12), transparent 38%),
         #f4f7fc;
+}
+
+.user-login-page {
+    padding: 8px 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .user-login-card {
@@ -220,7 +222,7 @@ require 'includes/header.php';
 
 @media (max-width: 575px) {
     .user-login-page {
-        padding: 24px 12px;
+        padding: 4px 0 16px;
     }
 
     .user-login-card {
