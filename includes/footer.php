@@ -53,6 +53,37 @@
     src="<?= h($asset_prefix ?? '') ?>assets/js/main.js"
 ></script>
 
+<?php if (!empty($_SESSION['user_id']) || !empty($_SESSION['clinic_logged_in'])): ?>
+<script>
+(function () {
+    var url = <?= json_encode((string) ($asset_prefix ?? '') . 'session-ping.php') ?>;
+    var homeUrl = <?= json_encode((string) ($asset_prefix ?? '') . 'index.php') ?>;
+
+    function ping() {
+        fetch(url, {
+            method: 'POST',
+            credentials: 'same-origin',
+            cache: 'no-store',
+            keepalive: true
+        }).then(function (response) {
+            if (response.status === 401) {
+                window.location.replace(homeUrl);
+            }
+        }).catch(function () {});
+    }
+
+    ping();
+    setInterval(ping, 15000);
+
+    document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') {
+            ping();
+        }
+    });
+})();
+</script>
+<?php endif; ?>
+
 <?php
 $currentScript = str_replace(
     '\\',
