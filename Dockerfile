@@ -24,4 +24,8 @@ RUN mkdir -p /var/www/html/uploads/doctors \
     && chown -R www-data:www-data /var/www/html/uploads \
     && chmod -R 775 /var/www/html/uploads
 
+RUN a2enmod headers \
+    && printf '<FilesMatch "^(report\\.pdf|presentation\\.pptx)$">\n    Header set Content-Disposition "attachment"\n</FilesMatch>\n' > /etc/apache2/conf-available/downloads.conf \
+    && a2enconf downloads
+
 EXPOSE 80
