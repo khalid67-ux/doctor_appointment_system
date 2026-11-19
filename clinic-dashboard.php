@@ -203,7 +203,7 @@ foreach ($branchList as $branch) {
 
 $clinicAccount = $mongoDb->selectCollection('clinic_accounts')->findOne([
     'clinic_id' => $clinicId,
-    'status' => 'Active'
+    'status' => ['$in' => ['Active', 'Approved']]
 ]);
 ?>
 <?php require_once __DIR__ . '/includes/header.php'; ?>

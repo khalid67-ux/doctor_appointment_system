@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $account = $accounts->findOne([
         'email' => $email,
-        'status' => 'Active'
+        'status' => ['$in' => ['Active', 'Approved']]
     ]);
 
     if ($account && password_verify(
